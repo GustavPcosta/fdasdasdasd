@@ -1,24 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { useState } from 'react';
+import Header from '../componentes/Header';
+import api from '../Services/api';
+import './styles.css';
 
 function App() {
+    const [search,setSearch] = useState('')
+    const [nome,setNome] = useState("");
+    const [avatar,setAvar] = useState('');
+    const [bio,setBio] = useState('');
+  async function seachGithub(){
+    
+        
+      try {
+        const response = await api.get(`/${search}`)
+        setNome(response.data.nome);
+        setAvar(response.data.avatar_url);
+        setBio(response.data.bio)
+      } catch (error) {
+          console.log(error)
+      }
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <Header/>
+    <div className="content-app">
+      <div className='content-second-app'>
+        <h1>Procurando Perfis do github</h1>
+          <form onSubmit={seachGithub}>
+              <input
+                type='text'
+                onChange={(e)=>setSearch(e.target.value)}
+                value={search}
+              >
+              </input>
+              < div className='btn-button'>
+              <button onClick={seachGithub}>
+                Buscar
+              </button>
+              </div>
+              <div className='content'>
+                <img src={avatar} alt='logo'>
+                </img>
+                <strong>{nome}</strong>
+                <p>{bio}</p>
+              </div>
+          </form>
+      </div>
     </div>
+    </>
   );
 }
 
